@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String? _search = null;
+  String? _search;
   final int _offset = 0;
 
   /*@override
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         // there is a search query use search api request
         response = await get(
           Uri.parse(
-            '${GiphyApi.baseUri}/gifs/search?api_key=${GiphyApi.key.value}&q=$_search&limit=20&offset=$_offset&rating=g&lang=en',
+            '${GiphyApi.baseUri.value}/gifs/search?api_key=${GiphyApi.key.value}&q=$_search&limit=20&offset=$_offset&rating=g&lang=en',
           ),
         );
       }
@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 18,
               ),
               textAlign: TextAlign.center,
+              onSubmitted: (text) => setState(() => _search = text),
             ),
           ),
           Expanded(
