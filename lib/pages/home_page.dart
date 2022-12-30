@@ -69,19 +69,30 @@ class _HomePageState extends State<HomePage> {
               bottomRight: Radius.circular(25),
               bottomLeft: Radius.circular(25)),
         ),
-        title: Image.network(
-            'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif'),
+        toolbarHeight: 0,
         bottom: PreferredSize(
             preferredSize: Size.fromHeight(200),
             child: Container(
               height: 200,
               color: Colors.green,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                        'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif')
-                  ]),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 100,
+                    child: Image.network(
+                        'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif',
+                        width: MediaQuery.of(context).size.width),
+                  ),
+                  Positioned(
+                    top: 100,
+                    child: Text('Hello',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 32,
+                        )),
+                  )
+                ],
+              ),
             )),
       ),
       body: Container(),
