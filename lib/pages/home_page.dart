@@ -17,6 +17,20 @@ class _HomePageState extends State<HomePage> {
   final String? _search = null;
   final int _offset = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    try {
+      _getGifs()!.then(
+        (map) {
+          print(map);
+        },
+      );
+    } catch (e) {
+      print('Exception: ${e.toString()}');
+    }
+  }
+
   Future<Map>? _getGifs() async {
     final Response response;
     try {
@@ -24,7 +38,7 @@ class _HomePageState extends State<HomePage> {
         // get trends gifs
         response = await get(
           Uri.parse(
-            '${GiphyApi.baseUri}/gifs/trending?api_key=${GiphyApi.key.value}&limit=20&rating=g',
+            '${GiphyApi.baseUri.value}/gifs/trending?api_key=${GiphyApi.key.value}&limit=20&rating=g',
           ),
         );
       } else {
