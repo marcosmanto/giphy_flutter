@@ -60,6 +60,29 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 2,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(25),
+              bottomLeft: Radius.circular(25)),
+        ),
+        title: Image.network(
+            'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif'),
+      ),
+      body: Container(),
+      floatingActionButton: CircleAvatar(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        child: IconButton(
+          padding: EdgeInsets.all(0),
+          icon: Icon(Icons.add),
+          color: Colors.white,
+          iconSize: 32,
+          onPressed: () {},
+        ),
+      ),
+    );
   }
 }
