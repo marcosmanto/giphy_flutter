@@ -71,6 +71,18 @@ class _HomePageState extends State<HomePage> {
         ),
         title: Image.network(
             'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif'),
+        bottom: PreferredSize(
+            preferredSize: Size.fromHeight(200),
+            child: Container(
+              height: 200,
+              color: Colors.green,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.network(
+                        'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif')
+                  ]),
+            )),
       ),
       body: Container(),
       floatingActionButton: CircleAvatar(
