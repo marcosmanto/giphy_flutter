@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:giphy_flutter/keys/api_keys.dart';
+import 'package:giphy_flutter/utils/clear_focus.dart';
 import 'package:http/http.dart';
 
 import '../exceptions/response_server_error.dart';
@@ -60,50 +61,62 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 2,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25)),
-        ),
-        toolbarHeight: 0,
-        bottom: PreferredSize(
-            preferredSize: Size.fromHeight(200),
-            child: Container(
-              height: 200,
-              color: Colors.green,
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 100,
-                    child: Image.network(
+    return ClearFocus(
+      child: Scaffold(
+        backgroundColor: Colors.grey[800],
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 2,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(25),
+                bottomLeft: Radius.circular(25)),
+          ),
+          toolbarHeight: 0,
+          bottom: PreferredSize(
+              preferredSize: Size.fromHeight(100),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                  ),
+                ),
+                height: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.network(
                         'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif',
                         width: MediaQuery.of(context).size.width),
-                  ),
-                  Positioned(
-                    top: 100,
-                    child: Text('Hello',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 32,
-                        )),
-                  )
-                ],
+                  ],
+                ),
+              )),
+        ),
+        body: Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextField(
+              decoration: InputDecoration(labelText: 'Pesquise por um GIF'),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
               ),
-            )),
-      ),
-      body: Container(),
-      floatingActionButton: CircleAvatar(
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        child: IconButton(
-          padding: EdgeInsets.all(0),
-          icon: Icon(Icons.add),
-          color: Colors.white,
-          iconSize: 32,
-          onPressed: () {},
+              textAlign: TextAlign.center,
+            ),
+          )
+        ]),
+        floatingActionButton: CircleAvatar(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          child: IconButton(
+            padding: EdgeInsets.all(0),
+            icon: Icon(Icons.add),
+            color: Colors.white,
+            iconSize: 32,
+            onPressed: () {},
+          ),
         ),
       ),
     );

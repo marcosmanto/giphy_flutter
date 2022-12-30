@@ -14,8 +14,22 @@ class GiphtApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(
-              primary: Colors.black, secondary: Colors.purple.shade300)),
+        colorScheme: theme.colorScheme.copyWith(
+          primary: Colors.black,
+          secondary: Color(0xFF0ef598),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          floatingLabelStyle: TextStyle(color: Color(0xFF00cafb)),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF0ef598)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF00cafb), width: 2),
+          ),
+          hintStyle: TextStyle(color: Colors.amber),
+          labelStyle: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
       home: HomePage(),
     );
   }
