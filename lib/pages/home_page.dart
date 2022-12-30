@@ -18,19 +18,16 @@ class _HomePageState extends State<HomePage> {
   final String? _search = null;
   final int _offset = 0;
 
-  @override
+  /*@override
   void initState() {
     super.initState();
-    try {
-      _getGifs()!.then(
-        (map) {
-          print(map);
-        },
-      );
-    } catch (e) {
-      print('Exception: ${e.toString()}');
-    }
-  }
+
+    _getGifs()!.then(
+      (map) {
+        print(map);
+      },
+    ).catchError((e) => print('Exception: ${e.toString()}'));
+  }*/
 
   Future<Map>? _getGifs() async {
     final Response response;
@@ -56,6 +53,7 @@ class _HomePageState extends State<HomePage> {
       throw ResponseServerError();
     }
     if (response.statusCode >= 400) throw ResponseServerError();
+    //await Future.delayed(Duration(seconds: 3));
     return json.decode(response.body);
   }
 
@@ -106,6 +104,37 @@ class _HomePageState extends State<HomePage> {
               ),
               textAlign: TextAlign.center,
             ),
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: _getGifs(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.none:
+                    return Container(
+                      width: 200,
+                      height: 200,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.secondary),
+                    );
+                  default:
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Erro ao carregar as imagens.',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: 18),
+                        ),
+                      );
+                    } else {
+                      return _createGifTable(context, snapshot);
+                    }
+                }
+              },
+            ),
           )
         ]),
         floatingActionButton: CircleAvatar(
@@ -117,6 +146,24 @@ class _HomePageState extends State<HomePage> {
             iconSize: 32,
             onPressed: () {},
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _createGifTable(BuildContext context, AsyncSnapshot<Map> snapshot) {
+    return GridView.builder(
+      itemCount: snapshot.data!['data'].length,
+      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+      ),
+      itemBuilder: (context, index) => GestureDetector(
+        child: Image.network(
+          snapshot.data!['data'][index]['images']['fixed_height']['url'],
+          fit: BoxFit.cover,
         ),
       ),
     );

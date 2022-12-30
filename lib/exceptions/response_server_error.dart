@@ -1,3 +1,4 @@
 class ResponseServerError implements Exception {
-  String errMsg() => 'A server error was returned.';
+  @override
+  String toString() => 'A server error was returned.';
 }

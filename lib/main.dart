@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:giphy_flutter/pages/home_page.dart';
 
 void main() {
-  runApp(const GiphtApp());
+  runApp(const GiphyApp());
 }
 
-class GiphtApp extends StatelessWidget {
-  const GiphtApp({super.key});
+class GiphyApp extends StatelessWidget {
+  const GiphyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
