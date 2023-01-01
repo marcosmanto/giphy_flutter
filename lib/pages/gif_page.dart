@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 const Map gifDataDefault = {
   'title': 'Imagem não encontrada',
@@ -22,7 +23,12 @@ class GifPage extends StatelessWidget {
           title: FittedBox(child: Text(gifData['title'])),
           leadingWidth: 30,
           centerTitle: true,
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.share))],
+          actions: [
+            IconButton(
+                onPressed: () =>
+                    Share.share(gifData['images']['fixed_height']['url']),
+                icon: Icon(Icons.share))
+          ],
         ),
         body: Center(
           child: Image.network(gifData['images']['fixed_height']['url']),

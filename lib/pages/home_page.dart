@@ -26,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     searchController.text = _search ?? '';
-    Share.share('check out my website https://example.com');
   }
 
   /*@override
@@ -225,6 +224,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 },
+                onLongPress: () => Share.share(snapshot.data!['data'][index]
+                    ['images']['fixed_height']['url']),
               );
             } else {
               return GestureDetector(
