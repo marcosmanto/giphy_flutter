@@ -15,8 +15,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FocusNode searchFocus = FocusNode();
+  final TextEditingController searchController = TextEditingController();
   String? _search;
-  final int _offset = 0;
+  int _offset = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    searchController.text = _search ?? '';
+  }
 
   /*@override
   void initState() {
@@ -31,6 +39,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<Map>? _getGifs() async {
     final Response response;
+
     try {
       if (_search == null) {
         // get trends gifs
@@ -43,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         // there is a search query use search api request
         response = await get(
           Uri.parse(
-            '${GiphyApi.baseUri.value}/gifs/search?api_key=${GiphyApi.key.value}&q=$_search&limit=20&offset=$_offset&rating=g&lang=en',
+            '${GiphyApi.baseUri.value}/gifs/search?api_key=${GiphyApi.key.value}&q=$_search&limit=19&offset=$_offset&rating=g&lang=en',
           ),
         );
       }
@@ -54,6 +63,7 @@ class _HomePageState extends State<HomePage> {
     }
     if (response.statusCode >= 400) throw ResponseServerError();
     //await Future.delayed(Duration(seconds: 3));
+    print('Requesting gifs...');
     return json.decode(response.body);
   }
 
@@ -87,8 +97,9 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.network(
-                        'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif',
-                        width: MediaQuery.of(context).size.width),
+                      'https://developers.giphy.com/branch/master/static/header-logo-0fec0225d189bc0eae27dac3e3770582.gif',
+                      //width: MediaQuery.of(context).size.width,
+                    ),
                   ],
                 ),
               )),
@@ -97,13 +108,20 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
+              controller: searchController,
+              focusNode: searchFocus,
               decoration: InputDecoration(labelText: 'Pesquise por um GIF'),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
               ),
               textAlign: TextAlign.center,
-              onSubmitted: (text) => setState(() => _search = text),
+              onSubmitted: (text) {
+                if (text.trim().isEmpty) return;
+                print('searching...');
+                setState(() => _search = text);
+                searchFocus.requestFocus();
+              },
             ),
           ),
           Expanded(
@@ -138,7 +156,7 @@ class _HomePageState extends State<HomePage> {
             ),
           )
         ]),
-        floatingActionButton: CircleAvatar(
+        /*floatingActionButton: CircleAvatar(
           backgroundColor: Theme.of(context).colorScheme.secondary,
           child: IconButton(
             padding: EdgeInsets.all(0),
@@ -147,26 +165,83 @@ class _HomePageState extends State<HomePage> {
             iconSize: 32,
             onPressed: () {},
           ),
-        ),
+        ),*/
       ),
     );
   }
 
+  int _getCount(List data) {
+    if (_search == null) {
+      return data.length;
+    } else {
+      return data.length + 1;
+    }
+  }
+
   Widget _createGifTable(BuildContext context, AsyncSnapshot<Map> snapshot) {
-    return GridView.builder(
-      itemCount: snapshot.data!['data'].length,
-      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemBuilder: (context, index) => GestureDetector(
-        child: Image.network(
-          snapshot.data!['data'][index]['images']['fixed_height']['url'],
-          fit: BoxFit.cover,
+    if (snapshot.data!['data'].length == 0) {
+      return Center(
+        child: Text(
+          _offset == 0
+              ? 'Não existem gifs para a consulta "$_search"'
+              : 'Todos os gifs de "$_search" foram exibidos.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+            fontSize: 18,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return GridView.builder(
+          itemCount: _getCount(snapshot.data!['data']),
+          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemBuilder: (context, index) {
+            // if not searching all items will be images OR
+            // if searching all be images except last one.
+            if (_search == null || index < snapshot.data!['data'].length) {
+              return GestureDetector(
+                child: Image.network(
+                  snapshot.data!['data'][index]['images']['fixed_height']
+                      ['url'],
+                  fit: BoxFit.cover,
+                ),
+              );
+            } else {
+              return GestureDetector(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                        radius: 35,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.black38,
+                          size: 70,
+                        )),
+                    SizedBox(height: 10),
+                    Text(
+                      'Carregar \nmais...',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        letterSpacing: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                onTap: () => setState(() => _offset += 19),
+              );
+            }
+          });
+    }
   }
 }
