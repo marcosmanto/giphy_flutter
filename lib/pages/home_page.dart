@@ -117,9 +117,11 @@ class _HomePageState extends State<HomePage> {
               ),
               textAlign: TextAlign.center,
               onSubmitted: (text) {
-                if (text.trim().isEmpty) return;
-                print('searching...');
-                setState(() => _search = text);
+                final String submitedText = text.trim();
+                // avoid submit when empty field or search text not changed
+                if (submitedText.isEmpty || submitedText == _search) return;
+                print('new search started...');
+                setState(() => _search = text.trim());
                 searchFocus.requestFocus();
               },
             ),
