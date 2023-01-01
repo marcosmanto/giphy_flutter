@@ -20,8 +20,9 @@ class GifPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         appBar: AppBar(
           title: FittedBox(child: Text(gifData['title'])),
-          leadingWidth: 22,
+          leadingWidth: 30,
           centerTitle: true,
+          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.share))],
         ),
         body: Center(
           child: Image.network(gifData['images']['fixed_height']['url']),

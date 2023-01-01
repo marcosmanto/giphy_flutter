@@ -5,6 +5,7 @@ import 'package:giphy_flutter/keys/api_keys.dart';
 import 'package:giphy_flutter/pages/gif_page.dart';
 import 'package:giphy_flutter/utils/clear_focus.dart';
 import 'package:http/http.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../exceptions/response_server_error.dart';
 
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     searchController.text = _search ?? '';
+    Share.share('check out my website https://example.com');
   }
 
   /*@override
