@@ -17,6 +17,7 @@ class GiphyApp extends StatelessWidget {
         colorScheme: theme.colorScheme.copyWith(
           primary: Colors.black,
           secondary: Color(0xFF0ef598),
+          tertiary: Colors.grey[800],
         ),
         inputDecorationTheme: InputDecorationTheme(
           floatingLabelStyle: TextStyle(color: Color(0xFF00cafb)),

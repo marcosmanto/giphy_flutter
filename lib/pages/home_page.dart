@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:giphy_flutter/keys/api_keys.dart';
+import 'package:giphy_flutter/pages/gif_page.dart';
 import 'package:giphy_flutter/utils/clear_focus.dart';
 import 'package:http/http.dart';
 
@@ -71,7 +72,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return ClearFocus(
       child: Scaffold(
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         appBar: AppBar(
           centerTitle: true,
           elevation: 2,
@@ -213,6 +214,15 @@ class _HomePageState extends State<HomePage> {
                       ['url'],
                   fit: BoxFit.cover,
                 ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => GifPage(
+                        gifData: snapshot.data!['data'][index],
+                      ),
+                    ),
+                  );
+                },
               );
             } else {
               return GestureDetector(
