@@ -6,6 +6,7 @@ import 'package:giphy_flutter/pages/gif_page.dart';
 import 'package:giphy_flutter/utils/clear_focus.dart';
 import 'package:http/http.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../exceptions/response_server_error.dart';
 
@@ -21,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController searchController = TextEditingController();
   String? _search;
   int _offset = 0;
+  //bool? _searchChanged;
 
   @override
   void initState() {
@@ -108,26 +110,78 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(children: [
           Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: TextField(
-              controller: searchController,
-              focusNode: searchFocus,
-              decoration: InputDecoration(labelText: 'Pesquise por um GIF'),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                controller: searchController,
+                cursorColor: Theme.of(context).colorScheme.secondary,
+                focusNode: searchFocus,
+                decoration: InputDecoration(
+                  labelText: 'Pesquise por um GIF',
+                ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+                onSubmitted: onSubmit,
+                //onChanged: onChanged,
+              )
+
+              /*Row(
+              children: [
+                Flexible(
+                  flex: 5,
+                  child: TextField(
+                    controller: searchController,
+                    cursorColor: Theme.of(context).colorScheme.secondary,
+                    focusNode: searchFocus,
+                    decoration: InputDecoration(
+                      labelText: 'Pesquise por um GIF',
+                    ),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                    onSubmitted: onSubmit,
+                    onChanged: onChanged,
+                  ),
+                ),
+                if (searchController.text.trim().isNotEmpty) ...[
+                  SizedBox(width: 10),
+                  SizedBox(
+                    width: 61,
+                    height: 61,
+                    child: _searchChanged == false
+                        ? ElevatedButton(
+                            onPressed: onReset,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black87,
+                              backgroundColor: Colors.red,
+                            ),
+                            child: Icon(
+                              Icons.cancel,
+                              size: 32,
+                              color: Colors.white,
+                            ),
+                          )
+                        : ElevatedButton(
+                            onPressed: () => onSubmit(searchController.text),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black87,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                            child: Icon(
+                              Icons.search,
+                              size: 32,
+                            ),
+                          ),
+                  )
+                ]
+              ],
+            ),*/
               ),
-              textAlign: TextAlign.center,
-              onSubmitted: (text) {
-                final String submitedText = text.trim();
-                // avoid submit when empty field or search text not changed
-                if (submitedText.isEmpty || submitedText == _search) return;
-                print('new search started...');
-                setState(() => _search = text.trim());
-                searchFocus.requestFocus();
-              },
-            ),
-          ),
           Expanded(
             child: FutureBuilder(
               future: _getGifs(),
@@ -197,66 +251,134 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else {
-      return GridView.builder(
-          itemCount: _getCount(snapshot.data!['data']),
-          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemBuilder: (context, index) {
-            // if not searching all items will be images OR
-            // if searching all be images except last one.
-            if (_search == null || index < snapshot.data!['data'].length) {
-              return GestureDetector(
-                child: Image.network(
-                  snapshot.data!['data'][index]['images']['fixed_height']
-                      ['url'],
-                  fit: BoxFit.cover,
-                ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => GifPage(
-                        gifData: snapshot.data!['data'][index],
-                      ),
+      return Stack(
+        children: [
+          GridView.builder(
+              itemCount: _getCount(snapshot.data!['data']),
+              padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) {
+                // if not searching all items will be images OR
+                // if searching all be images except last one.
+                if (_search == null || index < snapshot.data!['data'].length) {
+                  return GestureDetector(
+                    child: FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: snapshot.data!['data'][index]['images']
+                          ['fixed_height']['url'],
+                      fit: BoxFit.cover,
                     ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => GifPage(
+                            gifData: snapshot.data!['data'][index],
+                          ),
+                        ),
+                      );
+                    },
+                    onLongPress: () => Share.share(snapshot.data!['data'][index]
+                        ['images']['fixed_height']['url']),
                   );
-                },
-                onLongPress: () => Share.share(snapshot.data!['data'][index]
-                    ['images']['fixed_height']['url']),
-              );
-            } else {
-              return GestureDetector(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                        radius: 35,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondary,
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.black38,
-                          size: 70,
-                        )),
-                    SizedBox(height: 10),
-                    Text(
-                      'Carregar \nmais...',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        letterSpacing: 1.5,
-                      ),
-                      textAlign: TextAlign.center,
+                } else {
+                  return GestureDetector(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                            radius: 35,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.black38,
+                              size: 70,
+                            )),
+                        SizedBox(height: 10),
+                        Text(
+                          'Carregar \nmais...',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            letterSpacing: 1.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                  ],
+                    onTap: () => setState(() => _offset += 19),
+                  );
+                }
+              }),
+          if (_search != null)
+            if (_search!.trim().isNotEmpty)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Opacity(
+                  opacity: .70,
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Text(
+                      'Página ${(_offset / 19 + 1).toInt().toString().padLeft(2, '0')}',
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  ),
                 ),
-                onTap: () => setState(() => _offset += 19),
-              );
-            }
-          });
+              ),
+        ],
+      );
     }
   }
+
+  void onSubmit(String text) {
+    final String submitedText = text.trim();
+
+    // search was cleared
+    /*if (submitedText.isEmpty && _search!.isNotEmpty) {
+      setState(() => _search = null);
+      return;
+    }*/
+
+    // avoid submit when empty field or search text not changed
+    if (submitedText.isEmpty || submitedText == _search) return;
+    print('new search started...');
+    setState(() {
+      //_searchChanged = true;
+
+      // reset page counter
+      _offset = 0;
+      _search = text.trim();
+    });
+    //searchFocus.requestFocus();
+  }
+
+  /*void onChanged(String text) {
+    final search = text.trim();
+    if (search.isEmpty) return;
+    if (_search == null) return;
+
+    if (search != _search) {
+      setState(() => _searchChanged = true);
+    } else {
+      setState(() => _searchChanged = false);
+    }
+  }*/
+
+  /*void onReset() {
+    searchController.clear();
+    setState(() {
+      _search = null;
+      _searchChanged = false;
+      _offset = 0;
+    });
+  }*/
+
 }
