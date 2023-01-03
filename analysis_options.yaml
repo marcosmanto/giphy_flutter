@@ -21,9 +21,9 @@ linter:
   # or a specific dart file by using the `// ignore: name_of_lint` and
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
-  rules:
-    prefer_const_constructors: false
-    prefer_const_constructors_in_immutables: false
-    prefer_const_literals_to_create_immutables: false
+  # rules:
+  #   prefer_const_constructors: false
+  #   prefer_const_constructors_in_immutables: false
+  #   prefer_const_literals_to_create_immutables: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

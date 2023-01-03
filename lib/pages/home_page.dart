@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +67,6 @@ class _HomePageState extends State<HomePage> {
             );
           }
         } catch (e) {
-          // ignore: avoid_print
           print('Exception: ${e.toString()}');
           throw ResponseServerError();
         }
@@ -122,12 +123,12 @@ class _HomePageState extends State<HomePage> {
           ),
           toolbarHeight: 0,
           bottom: PreferredSize(
-              preferredSize: Size.fromHeight(100),
+              preferredSize: const Size.fromHeight(100),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomRight: Radius.circular(25),
                     bottomLeft: Radius.circular(25),
                   ),
@@ -155,10 +156,10 @@ class _HomePageState extends State<HomePage> {
                     controller: searchController,
                     cursorColor: Theme.of(context).colorScheme.secondary,
                     focusNode: searchFocus,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Pesquise por um GIF',
                     ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                     ),
@@ -168,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 if (searchController.text.trim().isNotEmpty) ...[
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   SizedBox(
                     width: 61,
                     height: 61,
@@ -181,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                               backgroundColor:
                                   Theme.of(context).colorScheme.secondary,
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.search,
                               size: 32,
                             ),
@@ -192,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                               foregroundColor: Colors.black87,
                               backgroundColor: Colors.red,
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.cancel,
                               size: 32,
                               color: Colors.white,
@@ -276,8 +277,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           GridView.builder(
               itemCount: _getCount(snapshot.data!['data']),
-              padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
@@ -314,13 +315,13 @@ class _HomePageState extends State<HomePage> {
                             radius: 35,
                             backgroundColor:
                                 Theme.of(context).colorScheme.secondary,
-                            child: Icon(
+                            child: const Icon(
                               Icons.add,
                               color: Colors.black38,
                               size: 70,
                             )),
-                        SizedBox(height: 10),
-                        Text(
+                        const SizedBox(height: 10),
+                        const Text(
                           'Carregar \nmais...',
                           style: TextStyle(
                             color: Colors.white,
@@ -352,14 +353,14 @@ class _HomePageState extends State<HomePage> {
                 child: Opacity(
                   opacity: .70,
                   child: Container(
-                    padding: EdgeInsets.all(8),
-                    margin: EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.secondary,
                         borderRadius: BorderRadius.circular(8)),
                     child: Text(
                       'Página ${(_offset / 19 + 1).toInt().toString().padLeft(2, '0')}',
-                      style: TextStyle(color: Colors.black54),
+                      style: const TextStyle(color: Colors.black54),
                     ),
                   ),
                 ),

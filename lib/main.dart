@@ -16,10 +16,10 @@ class GiphyApp extends StatelessWidget {
       theme: theme.copyWith(
         colorScheme: theme.colorScheme.copyWith(
           primary: Colors.black,
-          secondary: Color(0xFF0ef598),
+          secondary: const Color(0xFF0ef598),
           tertiary: Colors.grey[800],
         ),
-        inputDecorationTheme: InputDecorationTheme(
+        inputDecorationTheme: const InputDecorationTheme(
           floatingLabelStyle: TextStyle(color: Color(0xFF00cafb)),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF0ef598)),
@@ -31,7 +31,7 @@ class GiphyApp extends StatelessWidget {
           labelStyle: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
