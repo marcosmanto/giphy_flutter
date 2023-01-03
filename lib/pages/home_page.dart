@@ -331,17 +331,20 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    onTap: () => setState(() => _offset += 19),
+                    onTap: () => setState(() {
+                      _offset += 19;
+                      _memoizer = AsyncMemoizer();
+                    }),
                   );
                 }
               }),
-          Text(
+          /*Text(
             'Search changed: $_searchChanged\nSearch: $_search',
             style: TextStyle(
               color: Colors.red,
               fontSize: 16,
             ),
-          ),
+          ),*/
           if (_search != null)
             if (_search!.trim().isNotEmpty)
               Align(
